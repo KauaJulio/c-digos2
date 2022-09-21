@@ -2,76 +2,73 @@ const Engine = Matter.Engine;
 const World = Matter.World;
 const Bodies = Matter.Bodies;
 const Body = Matter.Body;
+let engine;
+let world;
 var ball;
-var block;
-var rectangle;
-var ground;
-var ball1;
-var block1;
-var rectangle1;
-var ground1;
-
-function preload()
-{
-	
-}
+var bmouse;
 
 function setup() {
 	createCanvas(800, 700);
 	engine = Engine.create();
 	world = engine.world;
-	
-	var ball_options = {
-		restitution : 0.87,
-		frictionAir : 0.01
-		
-		}
+  bmouse = createImg("right.png") 
 
-	  var block_options = {
-		restitution : 0.87,
-		frictionAir : 0.01
+	bmouse.position(40, 30)
+  bmouse.size(50, 50)
+	bmouse.mouseClicked(jumpBall)
 
-	  }
+  ground =new Ground(200,650,400,20);
+  right = new Ground(690,750,20,400);
+  left = new Ground(550,750,20,400);
+  top_wall = new Ground(600,650,400,20);
 
-	  var rectangle_options = {
-		restitution : 0.87,
-		frictionAir : 0.01
-	
-	  }
 
-	  var ground_options = {
-		isStatic : true
-	  }
+	var ball_options={
+		isStatic: false,
+		restitution: 0.3,
+		friction: 0,
+		density: 1.2
+	}
 
-	ball1 = Bodies.circle(220, 200, 20, ball_options);
-	World.add(world, ball1);
-	
-	block1 = Bodies.rectangle(110, 50, 20, 20, block_options);
-	World.add(world, block1);
-
-	rectangle1 = Bodies.rectangle(350, 50, 20, 20, rectangle_options);
-	World.add(world, rectangle1);
-
-	ground1 = Bodies.rectangle(390,200,400,20, ground_options);
+	ball = Bodies.circle(220, 200, 20, ball_options);
+	World.add(world, ball);
 
 	Engine.run(engine);
-	rectMode(CENTER);
 	ellipseMode(RADIUS);
+	rectMode(CENTER);
+
 }
 
 
 function draw() {
   rectMode(CENTER);
-  background("green");
+  background("black");
   Engine.update(engine);
-  
- ellipse(ball1.position.x,ball1.position.y,20);
- rect(block1.position.x,block1.position.y,40,20);
- rect(rectangle1.position.x,rectangle1.position.y,40,20);
- rect(ground.position.x,ground.position.y,50,20);
+  ground.show();
+  top_wall.show();
+  left.show();
+  right.show();
+  ellipse(ball.position.x,ball.position.y,20);
 
   drawSprites();
+ 
 }
 
+function jumpBall() {
+	Matter.Body.applyForce(ball, {
+		x: 0, 
+		y: 0
+	  }, {
+		x: 0,
+		y: -0.04
+	  } )
+	  Matter.Body.applyForce(ball, {
+		x: 0, 
+		y: 0
+	  }, {
+		x: 0.04,
+		y: 0
+	  } )
+}
 
 
